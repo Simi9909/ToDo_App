@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
    <children>
       <AnchorPane prefHeight="150.0" prefWidth="1080.0" style="-fx-background-color: red;">
@@ -58,13 +57,14 @@
         <columns>
           <TableColumn fx:id="col_task" prefWidth="237.02645874023438" text="Task" />
           <TableColumn fx:id="col_person" prefWidth="169.06195068359375" text="Person" />
-            <TableColumn fx:id="col_startdate" prefWidth="138.4779052734375" text="Start date" />
-            <TableColumn fx:id="col_finishdate" prefWidth="129.1326904296875" text="Start date" />
+            <TableColumn fx:id="col_startdate" prefWidth="131.681396484375" text="Start date" />
+            <TableColumn fx:id="col_finishdate" prefWidth="136.77880859375" text="Finish date" />
         </columns>
       </TableView>
       <Button fx:id="btn_delete" layoutX="275.0" layoutY="468.0" mnemonicParsing="false" onAction="#Delete" prefHeight="30.0" prefWidth="100.0" text="Delete" />
       <Button fx:id="btn_update" layoutX="159.0" layoutY="468.0" mnemonicParsing="false" onAction="#Update" prefHeight="30.0" prefWidth="100.0" text="Update" />
       <Button fx:id="btn_insert" layoutX="43.0" layoutY="468.0" mnemonicParsing="false" onAction="#Insert" prefHeight="30.0" prefWidth="100.0" text="Insert" />
       <Button fx:id="btn_exit" layoutX="117.0" layoutY="640.0" mnemonicParsing="false" onAction="#Exit" prefHeight="31.0" prefWidth="184.0" text="Exit" />
+      <Button fx:id="btn_refresh" layoutX="159.0" layoutY="533.0" mnemonicParsing="false" onAction="#Refresh" prefHeight="30.0" prefWidth="100.0" text="Refresh table" />
    </children>
 </AnchorPane>
