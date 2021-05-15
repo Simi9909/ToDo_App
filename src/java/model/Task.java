@@ -1,16 +1,18 @@
 package model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDate;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Data
 @Entity
+@Builder
 public class Task {
 
     @Id
@@ -28,5 +30,59 @@ public class Task {
 
     @Column(nullable=false)
     private LocalDate finishdate;
+
+    public Task(EntityManager em) {
+    }
+
+    public Task(long id, String task, String person, LocalDate startdate, LocalDate finishdate) {
+        this.id = id;
+        this.task = task;
+        this.person = person;
+        this.startdate = startdate;
+        this.finishdate = finishdate;
+    }
+
+    public Task() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTask() {
+        return task;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
+    }
+
+    public String getPerson() {
+        return person;
+    }
+
+    public void setPerson(String person) {
+        this.person = person;
+    }
+
+    public LocalDate getStartdate() {
+        return startdate;
+    }
+
+    public void setStartdate(LocalDate startdate) {
+        this.startdate = startdate;
+    }
+
+    public void setFinishdate(LocalDate finishdate) {
+        this.finishdate = finishdate;
+    }
+
+    public LocalDate getFinishdate() {
+        return finishdate;
+    }
 
 }
