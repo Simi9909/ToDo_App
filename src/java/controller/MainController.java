@@ -1,6 +1,7 @@
 package controller;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -18,6 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Task;
 import model.TransferUtility;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import static java.lang.Integer.parseInt;
@@ -115,10 +117,31 @@ public class MainController {
                         newTask.setPerson(tf_person.getText());
                         newTask.setStartdate(dp_startdate.getValue());
                         newTask.setFinishdate(dp_finishdate.getValue());
+                        if (tf_task.getText().trim().isEmpty() || tf_person.getText().isEmpty() ||
+                                dp_startdate.getValue() == null || dp_finishdate.getValue() == null) {
+                                System.out.println("Blank field detected");
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Error message");
+                                alert.setHeaderText(null);
+                                alert.setContentText("Dont leave blank fields");
+                                alert.showAndWait();
+                        }   else {
+                                /*EntityManager em = DBConnection.getEntityManager();
+                                System.out.println("entity manager");
+                                PreparedStatement st = (PreparedStatement) em.createQuery("select person from Task");
+                                System.out.println("select");
+                                ResultSet rs=st.executeQuery();
+                                String testtask=tf_task.getText();
+                                String testtask2=rs.getString("col_person");
+                                if (testtask.equals(testtask2)){
+                                        System.out.println("Egyformák");
+                                } else {
 
-                        createNewTask.AddNewTask(newTask);
+                                }*/
+                                createNewTask.AddNewTask(newTask);
+                        }
 
-                } catch ( Exception e) {
+                } catch (Exception e) {
                         System.out.println("Invalid data detected");
                 }
                 Refresh();
@@ -126,7 +149,6 @@ public class MainController {
 
         @FXML
         void Update(ActionEvent event) {
-                TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem();
 
                 try {
                         Task newTask = new Task();
@@ -136,7 +158,19 @@ public class MainController {
                         newTask.setStartdate(dp_startdate.getValue());
                         newTask.setFinishdate(dp_finishdate.getValue());
 
-                        createNewTask.UpdateTask(newTask);
+                        if (tf_task.getText().trim().isEmpty() || tf_person.getText().isEmpty() ||
+                        dp_startdate.getValue() == null || dp_finishdate.getValue() == null) {
+                                System.out.println("Inserting invalid type");
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Error message");
+                                alert.setHeaderText(null);
+                                alert.setContentText("Dont leave blank fields");
+                                alert.showAndWait();
+                        } else {
+                                createNewTask.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
+
+                                createNewTask.UpdateTask(newTask);
+                        }
 
                         System.out.println("Update successfully");
                 } catch (Exception e){

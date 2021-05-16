@@ -1,12 +1,9 @@
 package model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDate;
 
 
@@ -55,10 +52,6 @@ public class Task {
 
     public String getTask() {
         return task;
-    }
-
-    public void setTask(String task) {
-        this.task = task;
     }
 
     public String getPerson() {
