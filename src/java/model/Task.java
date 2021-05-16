@@ -58,10 +58,6 @@ public class Task {
         return person;
     }
 
-    public void setPerson(String person) {
-        this.person = person;
-    }
-
     public LocalDate getStartdate() {
         return startdate;
     }
