@@ -1,7 +1,5 @@
 package database;
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.persistence.EntityManager;
 import java.lang.reflect.ParameterizedType;
 
@@ -9,71 +7,72 @@ import org.tinylog.Logger;
 
 /**
  * Abstract class what contains the the basic database operations
+ *
  * @param <T>
  */
 public abstract class DateBase<T> {
 
     private final Class<T> entityClass;
 
-    public DateBase(){
+    public DateBase() {
         this.entityClass = ((Class) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
     /**
      * Generic method for adding nem task to database
+     *
      * @param entity the task we want ot add
      */
-    public void AddNewTask(T entity){
+    public void AddNewTask(T entity) {
         EntityManager em = DBConnection.getEntityManager();
-        try{
+        try {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
             Logger.info("New entity added");
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.error("Failed to upload entity" + e.toString());
-        }finally {
+        } finally {
             em.close();
         }
     }
 
     /**
      * Generic method for updating a task in the database
+     *
      * @param entity the task we want to update
      */
-    public void UpdateTask(T entity){
+    public void UpdateTask(T entity) {
         EntityManager em = DBConnection.getEntityManager();
-        try{
+        try {
             em.getTransaction().begin();
             em.merge(entity);
             em.getTransaction().commit();
             Logger.info("Entity updated");
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.error("Error occurred during update" + e.toString());
-        }finally {
+        } finally {
             em.close();
         }
     }
 
     /**
      * Generic method for deleting a task from the databse
+     *
      * @param entity the task we want to delete
-     * @return the result of the method, true if the delete was successfully
      */
 
-    public boolean DeleteTask(T entity){
+    public void DeleteTask(T entity) {
         EntityManager em = DBConnection.getEntityManager();
-        try{
+        try {
             em.getTransaction().begin();
             em.remove(em.contains(entity) ? entity : em.merge(entity));
             em.getTransaction().commit();
             Logger.info("Entity deleted");
-            return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.error("Error occurred during delete" + e.toString());
-            return false;
-        }finally {
+        } finally {
             em.close();
         }
     }

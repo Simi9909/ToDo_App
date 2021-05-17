@@ -17,24 +17,25 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String task;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String person;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private LocalDate startdate;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private LocalDate finishdate;
 
     /**
      * Creates a new instanse of the Task class
-     * @param id the task id
-     * @param task the task name
-     * @param person the person who get the task
-     * @param startdate the start date of the task
+     *
+     * @param id         the task id
+     * @param task       the task name
+     * @param person     the person who get the task
+     * @param startdate  the start date of the task
      * @param finishdate the finish date of the task
      */
     public Task(long id, String task, String person, LocalDate startdate, LocalDate finishdate) {

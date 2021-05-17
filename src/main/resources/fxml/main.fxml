@@ -14,7 +14,7 @@
    <children>
       <AnchorPane prefHeight="150.0" prefWidth="1080.0" style="-fx-background-color: red;">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="389.0" layoutY="21.0" prefHeight="107.0" prefWidth="301.0" text="Todo App">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="389.0" layoutY="21.0" prefHeight="107.0" prefWidth="301.0" text="Todo App" textAlignment="CENTER">
                <font>
                   <Font size="64.0" />
                </font>

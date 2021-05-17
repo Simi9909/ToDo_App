@@ -1,5 +1,6 @@
 import database.Check;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 public class CheckIfDatesAreCorrect {
 
     @Test
-    public void dateIsOk(){
+    public void dateIsOk() {
 
         Check check = new Check();
 
@@ -18,7 +19,7 @@ public class CheckIfDatesAreCorrect {
     }
 
     @Test
-    public void dateIsWrong(){
+    public void dateIsWrong() {
 
         Check check = new Check();
 

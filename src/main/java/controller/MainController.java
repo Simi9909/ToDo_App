@@ -1,9 +1,8 @@
 package controller;
 
-import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ResourceBundle;
+
 import database.Check;
 import database.DBConnection;
 import database.TaskRepository;
@@ -24,12 +23,6 @@ import javax.transaction.Transactional;
  * Main controller class
  */
 public class MainController {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private TextField tf_task;
@@ -57,21 +50,6 @@ public class MainController {
 
     @FXML
     private TableColumn<Task, LocalDate> col_finishdate;
-
-    @FXML
-    private Button btn_delete;
-
-    @FXML
-    private Button btn_update;
-
-    @FXML
-    private Button btn_insert;
-
-    @FXML
-    private Button btn_exit;
-
-    @FXML
-    private Button btn_refresh;
 
     private TaskRepository taskRepository = new TaskRepository();
 
@@ -106,6 +84,7 @@ public class MainController {
 
     /**
      * Method to insert data into database
+     *
      * @param event
      */
     @FXML
@@ -154,13 +133,13 @@ public class MainController {
                  * Checking if the entered dates are already in the database for the person
                  */
                 try {
-                    Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg","S9nooKD9cK");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg", "S9nooKD9cK");
                     String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
 
                     PreparedStatement preparedStatement = con.prepareStatement(sql);
-                    preparedStatement.setString(1,tf_person.getText());
+                    preparedStatement.setString(1, tf_person.getText());
                     preparedStatement.setDate(2, Date.valueOf(dp_startdate.getValue()));
-                    preparedStatement.setString(3,tf_person.getText());
+                    preparedStatement.setString(3, tf_person.getText());
                     preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));
 
                     ResultSet resultSet = preparedStatement.executeQuery();
@@ -200,6 +179,7 @@ public class MainController {
 
     /**
      * Method for updating an existing task, same as the insert
+     *
      * @param event
      */
     @FXML
@@ -220,8 +200,7 @@ public class MainController {
                 alert.setHeaderText(null);
                 alert.setContentText("Dont leave blank fields");
                 alert.showAndWait();
-            } else
-            if (check.checkDates(dp_startdate.getValue(), dp_finishdate.getValue())) {
+            } else if (check.checkDates(dp_startdate.getValue(), dp_finishdate.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Wrong dates");
                 alert.setHeaderText(null);
@@ -231,14 +210,15 @@ public class MainController {
                 try {
                     //taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
                     //taskRepository.UpdateTask(newTask);
-                    Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg","S9nooKD9cK");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg", "S9nooKD9cK");
                     String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
 
                     PreparedStatement preparedStatement = con.prepareStatement(sql);
-                    preparedStatement.setString(1,tf_person.getText());
+                    preparedStatement.setString(1, tf_person.getText());
                     preparedStatement.setDate(2, Date.valueOf(dp_startdate.getValue()));
-                    preparedStatement.setString(3,tf_person.getText());
-                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));;
+                    preparedStatement.setString(3, tf_person.getText());
+                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));
+                    ;
 
                     ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -272,6 +252,7 @@ public class MainController {
 
     /**
      * Method for deleting a task from the database
+     *
      * @param event
      */
     @FXML
@@ -284,6 +265,7 @@ public class MainController {
 
     /**
      * Method for closing the application
+     *
      * @param event
      */
     @FXML

@@ -9,7 +9,7 @@ import javax.persistence.Persistence;
  */
 public class DBConnection {
 
-    private DBConnection(){
+    private DBConnection() {
     }
 
     /**
@@ -19,6 +19,7 @@ public class DBConnection {
 
     /**
      * Method for creating an entity manager anywhere in the program.
+     *
      * @return new entity manager.
      */
     public static EntityManager getEntityManager() {
@@ -28,14 +29,14 @@ public class DBConnection {
     /**
      * {@code closeEmf()} closes the connection with the database
      */
-    public static void closeEmf(){
+    public static void closeEmf() {
         emf.close();
     }
 
     /**
      * {@code openEmf()} opens the connection with the database
      */
-    public static void openEmf(){
+    public static void openEmf() {
         emf.isOpen();
     }
 
