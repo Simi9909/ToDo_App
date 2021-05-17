@@ -1,7 +1,11 @@
 package database;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.persistence.EntityManager;
 import java.lang.reflect.ParameterizedType;
+
+import org.tinylog.Logger;
 
 public abstract class DateBase<T> {
 
@@ -18,9 +22,9 @@ public abstract class DateBase<T> {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
-            System.out.println("New antity added");
+            Logger.info("New entity added");
         }catch (Exception e){
-            System.out.println("Failed to upload entity");
+            Logger.error("Failed to upload entity" + e.toString());
         }finally {
             em.close();
         }
@@ -32,9 +36,9 @@ public abstract class DateBase<T> {
             em.getTransaction().begin();
             em.merge(entity);
             em.getTransaction().commit();
-            System.out.println("Entity updated");
+            Logger.info("Entity updated");
         }catch (Exception e){
-            System.out.println("Error occurred during update" + e.toString());
+            Logger.error("Error occurred during update" + e.toString());
         }finally {
             em.close();
         }
@@ -46,10 +50,10 @@ public abstract class DateBase<T> {
             em.getTransaction().begin();
             em.remove(em.contains(entity) ? entity : em.merge(entity));
             em.getTransaction().commit();
-            System.out.println("Entity deleted");
+            Logger.info("Entity deleted");
             return true;
         }catch (Exception e){
-            System.out.println("Error occurred during delete");
+            Logger.error("Error occurred during delete" + e.toString());
             return false;
         }finally {
             em.close();

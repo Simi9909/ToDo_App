@@ -1,6 +1,7 @@
 package database;
 
 import model.Task;
+import org.tinylog.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -24,10 +25,10 @@ public class TaskRepository extends DateBase<Task> {
 
         try {
             Query q = em.createQuery(cq);
-            System.out.println("Table loaded successfully");
+            Logger.info("Table loaded successfully");
             return q.getResultList();
         } catch (Exception e) {
-            System.out.println("Select failed");
+            Logger.error("Select failed");
         } finally {
             em.close();
         }

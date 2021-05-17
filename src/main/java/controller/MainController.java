@@ -5,6 +5,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import com.mysql.cj.log.Log;
 import database.DBConnection;
 import database.TaskRepository;
 import javafx.application.Platform;
@@ -16,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Task;
 import model.TransferUtility;
+import org.tinylog.Logger;
 
 import javax.management.Query;
 import javax.persistence.EntityManager;
@@ -70,16 +72,6 @@ public class MainController {
     @FXML
     private Button btn_exit;
 
-    private Task task;
-
-    public Button getBtn_refresh() {
-        return btn_refresh;
-    }
-
-    public void setBtn_refresh(Button btn_refresh) {
-        this.btn_refresh = btn_refresh;
-    }
-
     @FXML
     private Button btn_refresh;
 
@@ -120,19 +112,19 @@ public class MainController {
 
             if (tf_task.getText().trim().isEmpty() || tf_person.getText().isEmpty() ||
                     dp_startdate.getValue() == null || dp_finishdate.getValue() == null) {
-                System.out.println("Blank field detected");
+                Logger.error("Blank field detected");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error message");
+                alert.setTitle("Blank field");
                 alert.setHeaderText(null);
                 alert.setContentText("Dont leave blank fields");
                 alert.showAndWait();
             } else
             if (dp_startdate.getValue().isAfter(dp_finishdate.getValue())) {
-                System.out.println("Wrong dates");
+                Logger.info("Wrong dates");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error message");
+                alert.setTitle("Wrong dates");
                 alert.setHeaderText(null);
-                alert.setContentText("Start date can1t be later then the the finish date");
+                alert.setContentText("Start date can't be later then the the finish date");
                 alert.showAndWait();
             } else {
                 try {
@@ -148,7 +140,7 @@ public class MainController {
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     if (resultSet.next()) {
-                        System.out.println("Person busy");
+                        Logger.info("Person busy");
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Information");
                         alert.setHeaderText(null);
@@ -156,16 +148,16 @@ public class MainController {
                         alert.showAndWait();
 
                     } else {
-                        System.out.println("Adding new data to table");
+                        Logger.info("Adding new data to table");
                         createNewTask.AddNewTask(newTask);
                     }
                 } catch (Exception e) {
-                    System.out.println("Something went wrong");
+                    Logger.error("Something went wrong");
                 }
             }
 
         } catch (Exception e) {
-            System.out.println("Invalid data detected");
+            Logger.error("Invalid data detected");
         }
         Refresh();
     }
@@ -183,16 +175,16 @@ public class MainController {
 
             if (tf_task.getText().trim().isEmpty() || tf_person.getText().isEmpty() ||
                     dp_startdate.getValue() == null || dp_finishdate.getValue() == null) {
-                System.out.println("Inserting invalid type");
+                Logger.info("Blank field detected");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error message");
+                alert.setTitle("Blank field");
                 alert.setHeaderText(null);
                 alert.setContentText("Dont leave blank fields");
                 alert.showAndWait();
             } else
             if (dp_startdate.getValue().isAfter(dp_finishdate.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error message");
+                alert.setTitle("Wrong dates");
                 alert.setHeaderText(null);
                 alert.setContentText("Start date can't be later then the the finish date");
                 alert.showAndWait();
@@ -210,7 +202,7 @@ public class MainController {
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     if (resultSet.next()) {
-                        System.out.println("Person busy");
+                        Logger.info("Person busy");
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Information");
                         alert.setHeaderText(null);
@@ -218,18 +210,18 @@ public class MainController {
                         alert.showAndWait();
 
                     } else {
-                        System.out.println("Adding new data to table");
+                        Logger.info("Adding new data to table");
                         createNewTask.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
                         createNewTask.UpdateTask(newTask);
                     }
                 } catch (Exception e) {
-                    System.out.println("Something went wrong");
+                    Logger.error("Something went wrong");
                 }
 
             }
 
         } catch (Exception e) {
-            System.out.println("Something went wrong in update");
+            Logger.error("Something went wrong in update");
         }
 
         Refresh();
@@ -248,6 +240,7 @@ public class MainController {
     void Exit(ActionEvent event) {
         Platform.exit();
         System.exit(0);
+        Logger.info("Application closed");
     }
 
     @FXML
@@ -257,6 +250,7 @@ public class MainController {
                     createNewTask.Query());
             tv_tasks.setItems(data);
             initColumn();
+            Logger.info("Table refreshed");
 
         } catch (Exception e) {
             System.out.println("Something went wrong in table refresh");

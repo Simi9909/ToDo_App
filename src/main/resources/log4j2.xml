@@ -14,11 +14,5 @@
         <Logger name="org.hibernate.type.descriptor.sql" level="off" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="org.hibernate.tool.hbm2ddl" level="off" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="org.hibernate.validator" level="off" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
     </Loggers>
 </Configuration>
