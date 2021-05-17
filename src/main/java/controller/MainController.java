@@ -137,12 +137,13 @@ public class MainController {
             } else {
                 try {
                     Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg","S9nooKD9cK");
-                    String sql = "select * from Task where person= ? and startdate= ? and finishdate=?";
+                    String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
 
                     PreparedStatement preparedStatement = con.prepareStatement(sql);
                     preparedStatement.setString(1,tf_person.getText());
                     preparedStatement.setDate(2, Date.valueOf(dp_startdate.getValue()));
-                    preparedStatement.setDate(3, Date.valueOf(dp_finishdate.getValue()));
+                    preparedStatement.setString(3,tf_person.getText());
+                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));
 
                     ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -151,7 +152,7 @@ public class MainController {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Information");
                         alert.setHeaderText(null);
-                        alert.setContentText("Person already busy at this day");
+                        alert.setContentText("Person already busy at this date");
                         alert.showAndWait();
 
                     } else {
@@ -198,10 +199,13 @@ public class MainController {
             } else {
                 try {
                     Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg","S9nooKD9cK");
-                    String sql = "select * from Task where person= ?";
+                    String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
 
                     PreparedStatement preparedStatement = con.prepareStatement(sql);
                     preparedStatement.setString(1,tf_person.getText());
+                    preparedStatement.setDate(2, Date.valueOf(dp_startdate.getValue()));
+                    preparedStatement.setString(3,tf_person.getText());
+                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));;
 
                     ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -210,7 +214,7 @@ public class MainController {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Information");
                         alert.setHeaderText(null);
-                        alert.setContentText("Person already busy at this day");
+                        alert.setContentText("Person already busy at this date");
                         alert.showAndWait();
 
                     } else {
