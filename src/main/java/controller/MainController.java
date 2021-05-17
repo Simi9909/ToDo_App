@@ -288,9 +288,10 @@ public class MainController {
      */
     @FXML
     void Exit(ActionEvent event) {
+        Logger.info("Application closed");
         Platform.exit();
         System.exit(0);
-        Logger.info("Application closed");
+
     }
 
     /**
