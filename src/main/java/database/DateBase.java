@@ -7,6 +7,10 @@ import java.lang.reflect.ParameterizedType;
 
 import org.tinylog.Logger;
 
+/**
+ * Abstract class what contains the the basic database operations
+ * @param <T>
+ */
 public abstract class DateBase<T> {
 
     private final Class<T> entityClass;
@@ -16,6 +20,10 @@ public abstract class DateBase<T> {
                 .getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
+    /**
+     * Generic method for adding nem task to database
+     * @param entity the task we want ot add
+     */
     public void AddNewTask(T entity){
         EntityManager em = DBConnection.getEntityManager();
         try{
@@ -30,6 +38,10 @@ public abstract class DateBase<T> {
         }
     }
 
+    /**
+     * Generic method for updating a task in the database
+     * @param entity the task we want to update
+     */
     public void UpdateTask(T entity){
         EntityManager em = DBConnection.getEntityManager();
         try{
@@ -43,6 +55,12 @@ public abstract class DateBase<T> {
             em.close();
         }
     }
+
+    /**
+     * Generic method for deleting a task from the databse
+     * @param entity the task we want to delete
+     * @return the result of the method, true if the delete was successfully
+     */
 
     public boolean DeleteTask(T entity){
         EntityManager em = DBConnection.getEntityManager();

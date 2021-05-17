@@ -4,8 +4,7 @@ import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-
-import com.mysql.cj.log.Log;
+import database.Check;
 import database.DBConnection;
 import database.TaskRepository;
 import javafx.application.Platform;
@@ -19,12 +18,11 @@ import model.Task;
 import model.TransferUtility;
 import org.tinylog.Logger;
 
-import javax.management.Query;
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import static java.lang.Integer.parseInt;
-
+/**
+ * Main controller class
+ */
 public class MainController {
 
     @FXML
@@ -75,8 +73,14 @@ public class MainController {
     @FXML
     private Button btn_refresh;
 
-    private TaskRepository createNewTask = new TaskRepository();
+    private TaskRepository taskRepository = new TaskRepository();
 
+    private Check check = new Check();
+
+
+    /**
+     * Method for initializing the connection and setting the clicked row data into the text field and data pickers
+     */
     @FXML
     void initialize() {
         DBConnection.openEmf();
@@ -89,6 +93,7 @@ public class MainController {
                 dp_finishdate.setValue(newVal.getFinishdate());
             }
         });
+
     }
 
     private void initColumn() {
@@ -99,9 +104,22 @@ public class MainController {
 
     }
 
+    /**
+     * Method to insert data into database
+     * @param event
+     */
     @FXML
     void Insert(ActionEvent event) {
+
         try {
+            /*Date d1 = Date.valueOf(dp_startdate.getValue());
+            System.out.println("d1 dtae "+dp_startdate.getValue());
+            Date d2 = Date.valueOf(dp_finishdate.getValue());
+            System.out.println("d2 date "+dp_finishdate.getValue());
+            */
+            /**
+             * Creating new task and setting up the walues
+             */
             Task newTask = new Task();
 
             newTask.setTask(tf_task.getText());
@@ -109,17 +127,21 @@ public class MainController {
             newTask.setStartdate(dp_startdate.getValue());
             newTask.setFinishdate(dp_finishdate.getValue());
 
-
-            if (tf_task.getText().trim().isEmpty() || tf_person.getText().isEmpty() ||
-                    dp_startdate.getValue() == null || dp_finishdate.getValue() == null) {
+            /**
+             * Checking if the entered data's are correct, if not making an alert with error massage
+             */
+            if (check.checkIfEmpty(tf_task.getText(), tf_person.getText(), dp_startdate.getValue(), dp_finishdate.getValue())) {
                 Logger.error("Blank field detected");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Blank field");
                 alert.setHeaderText(null);
                 alert.setContentText("Dont leave blank fields");
                 alert.showAndWait();
-            } else
-            if (dp_startdate.getValue().isAfter(dp_finishdate.getValue())) {
+            }
+            /**
+             * Checking if the entered data's are correct, if not making an alert with error massage
+             */
+            else if (check.checkDates(dp_startdate.getValue(), dp_finishdate.getValue())) {
                 Logger.info("Wrong dates");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Wrong dates");
@@ -127,6 +149,10 @@ public class MainController {
                 alert.setContentText("Start date can't be later then the the finish date");
                 alert.showAndWait();
             } else {
+
+                /**
+                 * Checking if the entered dates are already in the database for the person
+                 */
                 try {
                     Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg","S9nooKD9cK");
                     String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
@@ -139,6 +165,16 @@ public class MainController {
 
                     ResultSet resultSet = preparedStatement.executeQuery();
 
+                    /*String sql = "select * from Task where person = ? and date=? between startdate=? and finishdate=?";
+
+                    PreparedStatement preparedStatement = con.prepareStatement(sql);
+                    preparedStatement.setString(1,tf_person.getText());
+                    preparedStatement.setDate(2, Date.valueOf(d1));
+                    preparedStatement.setDate(3, Date.valueOf(dp_startdate.getValue()));
+                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));
+
+                    ResultSet resultSet = preparedStatement.executeQuery();*/
+
                     if (resultSet.next()) {
                         Logger.info("Person busy");
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -149,7 +185,7 @@ public class MainController {
 
                     } else {
                         Logger.info("Adding new data to table");
-                        createNewTask.AddNewTask(newTask);
+                        taskRepository.AddNewTask(newTask);
                     }
                 } catch (Exception e) {
                     Logger.error("Something went wrong");
@@ -162,6 +198,10 @@ public class MainController {
         Refresh();
     }
 
+    /**
+     * Method for updating an existing task, same as the insert
+     * @param event
+     */
     @FXML
     void Update(ActionEvent event) {
 
@@ -173,8 +213,7 @@ public class MainController {
             newTask.setStartdate(dp_startdate.getValue());
             newTask.setFinishdate(dp_finishdate.getValue());
 
-            if (tf_task.getText().trim().isEmpty() || tf_person.getText().isEmpty() ||
-                    dp_startdate.getValue() == null || dp_finishdate.getValue() == null) {
+            if (check.checkIfEmpty(tf_task.getText(), tf_person.getText(), dp_startdate.getValue(), dp_finishdate.getValue())) {
                 Logger.info("Blank field detected");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Blank field");
@@ -182,7 +221,7 @@ public class MainController {
                 alert.setContentText("Dont leave blank fields");
                 alert.showAndWait();
             } else
-            if (dp_startdate.getValue().isAfter(dp_finishdate.getValue())) {
+            if (check.checkDates(dp_startdate.getValue(), dp_finishdate.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Wrong dates");
                 alert.setHeaderText(null);
@@ -190,6 +229,8 @@ public class MainController {
                 alert.showAndWait();
             } else {
                 try {
+                    //taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
+                    //taskRepository.UpdateTask(newTask);
                     Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg","S9nooKD9cK");
                     String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
 
@@ -211,9 +252,10 @@ public class MainController {
 
                     } else {
                         Logger.info("Adding new data to table");
-                        createNewTask.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
-                        createNewTask.UpdateTask(newTask);
+                        taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
+                        taskRepository.UpdateTask(newTask);
                     }
+
                 } catch (Exception e) {
                     Logger.error("Something went wrong");
                 }
@@ -228,14 +270,22 @@ public class MainController {
 
     }
 
+    /**
+     * Method for deleting a task from the database
+     * @param event
+     */
     @FXML
     @Transactional
     public void Delete(ActionEvent event) {
-        createNewTask.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
+        taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
         Refresh();
 
     }
 
+    /**
+     * Method for closing the application
+     * @param event
+     */
     @FXML
     void Exit(ActionEvent event) {
         Platform.exit();
@@ -243,11 +293,14 @@ public class MainController {
         Logger.info("Application closed");
     }
 
+    /**
+     * Method for refreshing the tableview
+     */
     @FXML
     void Refresh() {
         try {
             ObservableList<Task> data = FXCollections.observableArrayList(
-                    createNewTask.Query());
+                    taskRepository.Query());
             tv_tasks.setItems(data);
             initColumn();
             Logger.info("Table refreshed");

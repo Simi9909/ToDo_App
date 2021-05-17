@@ -1,15 +1,16 @@
 package model;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 
+/**
+ * Model of a Task.
+ */
 @Data
 @Entity
-@Builder
 public class Task {
 
     @Id
@@ -28,9 +29,14 @@ public class Task {
     @Column(nullable=false)
     private LocalDate finishdate;
 
-    public Task(EntityManager em) {
-    }
-
+    /**
+     * Creates a new instanse of the Task class
+     * @param id the task id
+     * @param task the task name
+     * @param person the person who get the task
+     * @param startdate the start date of the task
+     * @param finishdate the finish date of the task
+     */
     public Task(long id, String task, String person, LocalDate startdate, LocalDate finishdate) {
         this.id = id;
         this.task = task;
@@ -39,6 +45,9 @@ public class Task {
         this.finishdate = finishdate;
     }
 
+    /**
+     * Public no args constructor
+     */
     public Task() {
     }
 

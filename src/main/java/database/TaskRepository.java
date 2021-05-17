@@ -8,10 +8,13 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Gets the data from database with query and puts them into an {@code} ArrayList anad returns it
+ */
 public class TaskRepository extends DateBase<Task> {
 
     public List<Task> Query() {
@@ -25,7 +28,7 @@ public class TaskRepository extends DateBase<Task> {
 
         try {
             Query q = em.createQuery(cq);
-            Logger.info("Table loaded successfully");
+            Logger.info("Select successful");
             return q.getResultList();
         } catch (Exception e) {
             Logger.error("Select failed");
