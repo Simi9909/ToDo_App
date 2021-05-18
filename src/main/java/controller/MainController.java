@@ -1,6 +1,5 @@
 package controller;
 
-import java.sql.*;
 import java.time.LocalDate;
 
 import database.Check;
@@ -91,11 +90,6 @@ public class MainController {
     void Insert(ActionEvent event) {
 
         try {
-            /*Date d1 = Date.valueOf(dp_startdate.getValue());
-            System.out.println("d1 dtae "+dp_startdate.getValue());
-            Date d2 = Date.valueOf(dp_finishdate.getValue());
-            System.out.println("d2 date "+dp_finishdate.getValue());
-            */
             /**
              * Creating new task and setting up the walues
              */
@@ -127,48 +121,20 @@ public class MainController {
                 alert.setHeaderText(null);
                 alert.setContentText("Start date can't be later then the the finish date");
                 alert.showAndWait();
+            }
+            /**
+             * Checking if the entered dates are already in the database for the person
+             */
+            else if (check.checkIfBusy(tf_person.getText(), dp_startdate.getValue(), dp_finishdate.getValue())){
+                Logger.info("Person busy");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setHeaderText(null);
+                alert.setContentText("Person already busy at this date");
+                alert.showAndWait();
             } else {
-
-                /**
-                 * Checking if the entered dates are already in the database for the person
-                 */
-                try {
-                    Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg", "S9nooKD9cK");
-                    String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
-
-                    PreparedStatement preparedStatement = con.prepareStatement(sql);
-                    preparedStatement.setString(1, tf_person.getText());
-                    preparedStatement.setDate(2, Date.valueOf(dp_startdate.getValue()));
-                    preparedStatement.setString(3, tf_person.getText());
-                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));
-
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    /*String sql = "select * from Task where person = ? and date=? between startdate=? and finishdate=?";
-
-                    PreparedStatement preparedStatement = con.prepareStatement(sql);
-                    preparedStatement.setString(1,tf_person.getText());
-                    preparedStatement.setDate(2, Date.valueOf(d1));
-                    preparedStatement.setDate(3, Date.valueOf(dp_startdate.getValue()));
-                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));
-
-                    ResultSet resultSet = preparedStatement.executeQuery();*/
-
-                    if (resultSet.next()) {
-                        Logger.info("Person busy");
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Person already busy at this date");
-                        alert.showAndWait();
-
-                    } else {
-                        Logger.info("Adding new data to table");
-                        taskRepository.AddNewTask(newTask);
-                    }
-                } catch (Exception e) {
-                    Logger.error("Something went wrong");
-                }
+                Logger.info("Adding new data to table");
+                taskRepository.AddNewTask(newTask);
             }
 
         } catch (Exception e) {
@@ -193,6 +159,9 @@ public class MainController {
             newTask.setStartdate(dp_startdate.getValue());
             newTask.setFinishdate(dp_finishdate.getValue());
 
+            /**
+             * Checking if the entered data's are correct, if not making an alert with error massage
+             */
             if (check.checkIfEmpty(tf_task.getText(), tf_person.getText(), dp_startdate.getValue(), dp_finishdate.getValue())) {
                 Logger.info("Blank field detected");
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -200,45 +169,31 @@ public class MainController {
                 alert.setHeaderText(null);
                 alert.setContentText("Dont leave blank fields");
                 alert.showAndWait();
-            } else if (check.checkDates(dp_startdate.getValue(), dp_finishdate.getValue())) {
+            }
+            /**
+             * Checking if the entered data's are correct, if not making an alert with error massage
+             */
+            else if (check.checkDates(dp_startdate.getValue(), dp_finishdate.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Wrong dates");
                 alert.setHeaderText(null);
                 alert.setContentText("Start date can't be later then the the finish date");
                 alert.showAndWait();
+            }
+            /**
+             * Checking if the entered dates are already in the database for the person
+             */
+            else if (check.checkIfBusy(tf_person.getText(), dp_startdate.getValue(), dp_finishdate.getValue())){
+                Logger.info("Person busy");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setHeaderText(null);
+                alert.setContentText("Person already busy at this date");
+                alert.showAndWait();
             } else {
-                try {
-                    //taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
-                    //taskRepository.UpdateTask(newTask);
-                    Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg", "S9nooKD9cK");
-                    String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
-
-                    PreparedStatement preparedStatement = con.prepareStatement(sql);
-                    preparedStatement.setString(1, tf_person.getText());
-                    preparedStatement.setDate(2, Date.valueOf(dp_startdate.getValue()));
-                    preparedStatement.setString(3, tf_person.getText());
-                    preparedStatement.setDate(4, Date.valueOf(dp_finishdate.getValue()));
-                    ;
-
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    if (resultSet.next()) {
-                        Logger.info("Person busy");
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Information");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Person already busy at this date");
-                        alert.showAndWait();
-
-                    } else {
-                        Logger.info("Adding new data to table");
-                        taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
-                        taskRepository.UpdateTask(newTask);
-                    }
-
-                } catch (Exception e) {
-                    Logger.error("Something went wrong");
-                }
+                Logger.info("Adding new data to table");
+                taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
+                taskRepository.UpdateTask(newTask);
 
             }
 
