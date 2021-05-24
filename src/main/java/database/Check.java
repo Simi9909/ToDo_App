@@ -1,8 +1,5 @@
 package database;
 
-import com.sun.javafx.collections.MappingChange;
-
-import java.sql.*;
 import java.time.LocalDate;
 
 /**
@@ -35,34 +32,14 @@ public class Check {
 
     /**
      * Checks if the perdon is already busy at the given date
-     * @param name name of the person
-     * @param st_date start date
-     * @param f_date finish date
+     * @param person_name name of the person
+     * @param start_date start date
+     * @param finish_date finish date
      * @return true if person is busy
      */
-    public boolean checkIfBusy(String name, LocalDate st_date, LocalDate f_date) {
-        boolean talalat = false;
-        try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://remotemysql.com:3306/dlOWKKEPJg", "dlOWKKEPJg", "S9nooKD9cK");
-            String sql = "select * from Task where (person= ? and startdate= ?) or (person= ? and finishdate=?)";
+    public boolean checkIfBusy(String person_name, LocalDate start_date, LocalDate finish_date) {
 
-            PreparedStatement preparedStatement = con.prepareStatement(sql);
-            preparedStatement.setString(1, name);
-            preparedStatement.setDate(2, Date.valueOf(st_date));
-            preparedStatement.setString(3, name);
-            preparedStatement.setDate(4, Date.valueOf(f_date));
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            
-            if (resultSet.next()){
-                talalat = true;
-            } else talalat = false;
-
-        } catch (Exception e) {
-            System.out.println("Error in check");
-        }
-         if (talalat==true){
-             return  true;
-         } else return false;
+        Query query = new Query();
+        return query.areDatesColliding(person_name, start_date, finish_date);
     }
 }

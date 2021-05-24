@@ -167,7 +167,7 @@ public class MainController {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Blank field");
                 alert.setHeaderText(null);
-                alert.setContentText("Dont leave blank fields");
+                alert.setContentText("Don't leave blank fields");
                 alert.showAndWait();
             }
             /**
