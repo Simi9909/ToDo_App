@@ -54,6 +54,8 @@ public class MainController {
 
     private Check check = new Check();
 
+    private Task task = new Task();
+
 
     /**
      * Method for initializing the connection and setting the clicked row data into the text field and data pickers
@@ -152,12 +154,11 @@ public class MainController {
     void Update(ActionEvent event) {
 
         try {
-            Task newTask = new Task();
 
-            newTask.setTask(tf_task.getText());
-            newTask.setPerson(tf_person.getText());
-            newTask.setStartdate(dp_startdate.getValue());
-            newTask.setFinishdate(dp_finishdate.getValue());
+            task.setTask(tf_task.getText());
+            task.setPerson(tf_person.getText());
+            task.setStartdate(dp_startdate.getValue());
+            task.setFinishdate(dp_finishdate.getValue());
 
             /**
              * Checking if the entered data's are correct, if not making an alert with error massage
@@ -193,7 +194,7 @@ public class MainController {
             } else {
                 Logger.info("Adding new data to table");
                 taskRepository.DeleteTask(TransferUtility.task = tv_tasks.getSelectionModel().getSelectedItem());
-                taskRepository.UpdateTask(newTask);
+                taskRepository.UpdateTask(task);
 
             }
 

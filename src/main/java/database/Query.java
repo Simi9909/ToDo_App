@@ -43,7 +43,10 @@ public class Query {
         }
         boolean start_after_finish = datesList.stream().anyMatch(x->x.getFinishdate().isAfter(s_date));
         boolean finish_before_start = datesList.stream().anyMatch(x->x.getStartdate().isBefore(f_date));
-        return start_after_finish && finish_before_start;
+        boolean finish_date_equal_another_start_date = datesList.stream().anyMatch(x->x.getStartdate().isEqual(f_date));
+        boolean start_date_equal_another_finish_date = datesList.stream().anyMatch(x->x.getFinishdate().isEqual(s_date));
+
+        return start_after_finish && finish_before_start || start_date_equal_another_finish_date || finish_date_equal_another_start_date;
 
     }
 
